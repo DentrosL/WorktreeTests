@@ -4,7 +4,7 @@
 
 O **Git Worktree** permite trabalhar com múltiplas branches do mesmo repositório simultaneamente, cada uma em um diretório diferente.
 
-Isso é útil, por exemplo, para manter uma branch de desenvolvimento aberta enquanto trabalha em outra branch sem precisar ficar fazendo `git checkout`/`git switch` constantemente.
+> Isso é útil, por exemplo, para manter uma branch de desenvolvimento aberta enquanto trabalha em outra branch sem precisar ficar fazendo `git checkout`/`git switch` constantemente.
 
 ## Comandos
 
@@ -228,4 +228,15 @@ git worktree remove ../projeto-dev
 git worktree prune
 ```
 
-<!-- link pra explicação prática -->
+### Explicação Teórica
+Uma explicação dos conceitos e dos principais comandos do Git Worktree:
+[Ver explicação teórica](ExplicacaoTeorica.md)
+
+### Explicação Prática
+Exemplo prático utilizando um pequeno projeto em Python para demonstrar
+o uso do Worktree em uma situação real de desenvolvimento:
+[Ver explicação prática](ExplicacaoPratica.md)
+
+#### Projeto
+Pequeno sistema desenvolvido em Python utilizado nos exemplos práticos:
+[Ver projeto](./proj/)
