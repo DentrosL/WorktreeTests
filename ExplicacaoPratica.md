@@ -18,8 +18,6 @@ proj/
 
 Para executar:
 ```bash
-cd proj
-
 python3 -m venv .venv
 source .venv/bin/activate
 
@@ -39,16 +37,7 @@ O sistema possui quatro funcionalidades:
 
 Neste ponto temos uma versão inicial e estável do projeto.
 
-## 2. Inicializando o Git (passo feito)
-
-Dentro do projeto:
-```bash
-cd proj
-
-git init
-git add .
-git commit -m "feat:✨ cria fintrack"
-```
+## 2. Inicializando o Git
 
 Podemos conferir a branch atual:
 ```bash
@@ -62,8 +51,8 @@ git worktree list
 
 Inicialmente teremos apenas o diretório principal:
 ```text
-.../proj  <commit>[branch]
-.../proj  8a77cd5 [master]
+.../WorktreeTests  <commit>[branch]
+.../WorktreeTests  3e653bf [main]
 ```
 
 ## 3. Criando a branch da nova feature
@@ -80,37 +69,24 @@ Agora começamos a trabalhar normalmente.
 A diferença é que, neste exemplo, queremos simular uma feature suficientemente grande para ainda não estar pronta quando surgir uma urgência.
 
 ## 4. Criando um Worktree para a feature
-
 Em vez de continuar utilizando apenas o diretório original, podemos criar um worktree para a feature:
 
 ```bash
-git switch main
+git switch master
 git worktree add ../proj_dashboard feature/dashboard
 ```
 
 Agora temos:
 
-```text
-proj/            → main
-proj_dashboard/  → feature/dashboard
-```
-
-Podemos confirmar:
-
 ```bash
 git worktree list
-```
 
-Algo semelhante a:
-
-```text
-.../proj             abc1234 [main]
-.../proj_dashboard   abc1234 [feature/dashboard]
+.../proj            d464825 [master]
+.../proj_dashboard  d464825 [feature/dashboard]
 ```
 
 Os dois worktrees começaram no mesmo commit, mas agora cada diretório está associado a uma branch diferente.
 
----
 
 ## 5. Trabalhando na feature
 
@@ -137,13 +113,11 @@ Por exemplo, podemos alterar a interface para apresentar:
 Durante o desenvolvimento, podemos ter vários arquivos modificados e código incompleto.
 
 Por exemplo:
-
 ```bash
 git status
 ```
 
 pode mostrar:
-
 ```text
 modified: fintrack/ui.py
 modified: fintrack/service.py
@@ -151,20 +125,14 @@ modified: fintrack/service.py
 
 Neste momento, imagine que o dashboard ainda não está pronto.
 
----
-
 ## 6. Surge um problema urgente
-
 Agora imagine que alguém encontrou um problema na versão estável da `main`.
 
 O cálculo do saldo está incorreto.
 
-A situação é:
-
+A **situação** é:
 ```text
-proj_dashboard/
-    ↓
-feature/dashboard
+proj_dashboard/ [feature/dashboard]
     ↓
 código incompleto
 arquivos modificados
@@ -180,26 +148,15 @@ Teríamos que guardar o trabalho atual:
 ```bash
 git stash
 ```
-
-ou fazer um commit temporário.
-
-Depois:
-
+ou fazer um commit temporário. Só depois:
 ```bash
 git switch main
 ```
-
-Corrigir o problema.
-
-Depois voltar para:
-
+Corrigir o problema. Depois voltar para:
 ```bash
 git switch feature/dashboard
 ```
-
 E recuperar o trabalho.
-
----
 
 ## 7. Utilizando o Worktree
 
@@ -214,67 +171,53 @@ cd ../proj
 Esse diretório está na:
 
 ```text
-main
+master
 ```
 
 Enquanto isso:
 
 ```text
-proj/
-    → main
-
-proj_dashboard/
-    → feature/dashboard
+proj/ [master]
+proj_dashboard/ [feature/dashboard]
 ```
 
 O código incompleto da feature continua intacto em:
-
 ```text
 proj_dashboard/
 ```
 
-Não precisamos fazer `stash`.
-
-Não precisamos criar um commit temporário.
-
-Não precisamos copiar arquivos.
-
----
+- Não precisamos fazer `stash`.
+- Não precisamos criar um commit temporário.
+- Não precisamos copiar arquivos.
 
 ## 8. Criando o Worktree para o hotfix
 
 Agora vamos criar uma branch específica para a correção:
-
 ```bash
 git worktree add -b hotfix/saldo ../proj_fix main
 ```
 
 Esse comando:
-
 1. cria a branch `hotfix/saldo`;
 2. cria o worktree `../proj_fix`;
 3. utiliza a `main` como ponto de partida.
 
 Agora temos:
-
 ```text
-proj/
-    → main
+proj/ [main]
 
-proj_dashboard/
-    → feature/dashboard
-
-proj_fix/
-    → hotfix/saldo
+proj_dashboard/ [feature/dashboard]
+proj_fix/ [hotfix/saldo]
 ```
 
 Podemos confirmar:
-
 ```bash
 git worktree list
-```
 
----
+.../proj            d464825 [master]
+.../proj_dashboard  d464825 [feature/dashboard]
+.../proj_fix        d464825 [hotfix/saldo]
+```
 
 ## 9. Corrigindo o problema
 
@@ -285,15 +228,11 @@ cd ../proj_fix
 ```
 
 Agora estamos na:
-
 ```text
 hotfix/saldo
 ```
 
-Fazemos a correção normalmente.
-
-Depois:
-
+Fazemos a correção normalmente. E depois:
 ```bash
 git add .
 git commit -m "fix: corrige cálculo do saldo"

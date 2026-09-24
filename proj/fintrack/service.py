@@ -53,7 +53,7 @@ class FinanceService:
         return {
             "income": income,
             "expenses": expenses,
-            "balance": income - expenses,
+            "balance": expenses - income,
             "count": len(transactions),
         }
 
