@@ -3,6 +3,7 @@ from .storage import JsonStorage
 
 
 class FinanceService:
+
     def __init__(self, storage: JsonStorage):
         self.storage = storage
 
@@ -21,7 +22,10 @@ class FinanceService:
         transaction_type: TransactionType,
     ) -> Transaction:
         transactions = self.storage.load()
-        next_id = max((transaction.id for transaction in transactions), default=0) + 1
+        next_id = max(
+            (transaction.id for transaction in transactions),
+            default=0,
+        ) + 1
 
         transaction = Transaction.create(
             transaction_id=next_id,
@@ -44,6 +48,7 @@ class FinanceService:
             for transaction in transactions
             if transaction.transaction_type == "income"
         )
+
         expenses = sum(
             transaction.amount
             for transaction in transactions
@@ -53,7 +58,7 @@ class FinanceService:
         return {
             "income": income,
             "expenses": expenses,
-            "balance": expenses - income,
+            "balance": income - expenses,
             "count": len(transactions),
         }
 
@@ -65,7 +70,23 @@ class FinanceService:
                 continue
 
             result[transaction.category] = (
-                result.get(transaction.category, 0) + transaction.amount
+                result.get(transaction.category, 0)
+                + transaction.amount
             )
 
-        return dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
+        return dict(
+            sorted(
+                result.items(),
+                key=lambda item: item[1],
+                reverse=True,
+            )
+        )
+
+    def dashboard(self) -> dict:
+        transactions = self.list_transactions()
+
+        return {
+            "summary": self.summary(),
+            "recent_transactions": transactions[:5],
+            "categories": dict(list(self.categories().items())[:5]),
+        }

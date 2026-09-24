@@ -1,3 +1,4 @@
+from rich.columns import Columns
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
@@ -25,8 +26,10 @@ class FinanceUI:
                 self._show_summary()
             elif option == "4":
                 self._show_categories()
+            elif option == "5":
+                self._show_dashboard()
             elif option == "0":
-                self.console.print("\nAté mais! 👋")
+                self.console.print("\nAté mais!")
                 return
             else:
                 self.console.print("[red]Opção inválida.[/red]")
@@ -49,6 +52,7 @@ class FinanceUI:
             "[bold]2[/bold] - Listar lançamentos\n"
             "[bold]3[/bold] - Resumo financeiro\n"
             "[bold]4[/bold] - Ver categorias\n"
+            "[bold]5[/bold] - Dashboard\n"
             "[bold]0[/bold] - Sair"
         )
 
@@ -60,7 +64,7 @@ class FinanceUI:
         category = input("Categoria: ").strip() or "Outros"
 
         transaction_type = input(
-            "Tipo ([green]r[/green]eceita/[red]d[/red]espesa): "
+            "Tipo (receita/despesa): "
         ).strip().lower()
 
         if transaction_type not in {"r", "d"}:
@@ -144,3 +148,80 @@ class FinanceUI:
             table.add_row(category, f"R$ {amount:.2f}")
 
         self.console.print(table)
+
+    def _show_dashboard(self):
+        dashboard = self.service.dashboard()
+        summary = dashboard["summary"]
+
+        cards = Columns(
+            [
+                Panel(
+                    f"[green]R$ {summary['income']:.2f}[/green]",
+                    title="Receitas",
+                    border_style="green",
+                ),
+                Panel(
+                    f"[red]R$ {summary['expenses']:.2f}[/red]",
+                    title="Despesas",
+                    border_style="red",
+                ),
+                Panel(
+                    f"[cyan]R$ {summary['balance']:.2f}[/cyan]",
+                    title="Saldo",
+                    border_style="cyan",
+                ),
+            ]
+        )
+
+        self.console.print("\n")
+        self.console.print(
+            Panel(
+                cards,
+                title="[bold cyan]Dashboard Financeiro[/bold cyan]",
+                border_style="cyan",
+            )
+        )
+
+        recent_table = Table(title="Últimos lançamentos")
+
+        recent_table.add_column("Data")
+        recent_table.add_column("Descrição")
+        recent_table.add_column("Categoria")
+        recent_table.add_column("Tipo")
+        recent_table.add_column("Valor", justify="right")
+
+        for transaction in dashboard["recent_transactions"]:
+            color = (
+                "green"
+                if transaction.transaction_type == "income"
+                else "red"
+            )
+
+            label = (
+                "Receita"
+                if transaction.transaction_type == "income"
+                else "Despesa"
+            )
+
+            recent_table.add_row(
+                transaction.date,
+                transaction.description,
+                transaction.category,
+                f"[{color}]{label}[/{color}]",
+                f"R$ {transaction.amount:.2f}",
+            )
+
+        self.console.print(recent_table)
+
+        categories_table = Table(title="Principais categorias de despesa")
+
+        categories_table.add_column("Categoria")
+        categories_table.add_column("Total", justify="right")
+
+        for category, amount in dashboard["categories"].items():
+            categories_table.add_row(
+                category,
+                f"R$ {amount:.2f}",
+            )
+
+        self.console.print(categories_table)
