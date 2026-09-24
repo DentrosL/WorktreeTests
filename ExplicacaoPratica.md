@@ -13,7 +13,7 @@ A ideia é simular uma situação comum no desenvolvimento:
 O projeto está dentro de:
 
 ```text
-proj/
+WorktreeTests/
 ```
 
 Para executar:
@@ -72,8 +72,8 @@ A diferença é que, neste exemplo, queremos simular uma feature suficientemente
 Em vez de continuar utilizando apenas o diretório original, podemos criar um worktree para a feature:
 
 ```bash
-git switch master
-git worktree add ../proj_dashboard feature/dashboard
+git switch main
+git worktree add ../WorktreeTestsFeature feature/dashboard
 ```
 
 Agora temos:
@@ -81,8 +81,8 @@ Agora temos:
 ```bash
 git worktree list
 
-.../proj            d464825 [master]
-.../proj_dashboard  d464825 [feature/dashboard]
+.../WorktreeTests         d464825 [main]
+.../WorktreeTestsFeature  d464825 [feature/dashboard]
 ```
 
 Os dois worktrees começaram no mesmo commit, mas agora cada diretório está associado a uma branch diferente.
@@ -93,13 +93,11 @@ Os dois worktrees começaram no mesmo commit, mas agora cada diretório está as
 Entramos no worktree da feature:
 
 ```bash
-cd ../proj_dashboard
+cd ../WorktreeTestsFeature
 ```
-
 Agora podemos começar a desenvolver o dashboard.
 
 Por exemplo, podemos alterar a interface para apresentar:
-
 ```text
 ╭────────────── FinTrack ──────────────╮
 │                                      │
@@ -119,10 +117,9 @@ git status
 
 pode mostrar:
 ```text
-modified: fintrack/ui.py
-modified: fintrack/service.py
+modified: WorktreeTests/fintrack/ui.py
+modified: WorktreeTests/fintrack/service.py
 ```
-
 Neste momento, imagine que o dashboard ainda não está pronto.
 
 ## 6. Surge um problema urgente
@@ -132,19 +129,16 @@ O cálculo do saldo está incorreto.
 
 A **situação** é:
 ```text
-proj_dashboard/ [feature/dashboard]
+WorktreeTestsFeature/ [feature/dashboard]
     ↓
 código incompleto
 arquivos modificados
 feature ainda não pronta
 ```
-
 Precisamos corrigir a `main`.
 
 ### Sem Worktree
-
 Teríamos que guardar o trabalho atual:
-
 ```bash
 git stash
 ```
@@ -159,121 +153,96 @@ git switch feature/dashboard
 E recuperar o trabalho.
 
 ## 7. Utilizando o Worktree
-
 Como já temos um worktree separado para a feature, podemos simplesmente trabalhar em outro diretório.
 
 Voltamos para o diretório principal:
 
 ```bash
-cd ../proj
+cd ../WorktreeTests
 ```
-
 Esse diretório está na:
-
 ```text
-master
+main
 ```
-
 Enquanto isso:
-
 ```text
-proj/ [master]
-proj_dashboard/ [feature/dashboard]
+WorktreeTests/ [main]
+WorktreeTestsFeature/ [feature/dashboard]
 ```
-
 O código incompleto da feature continua intacto em:
 ```text
-proj_dashboard/
+WorktreeTestsFeature/
 ```
-
 - Não precisamos fazer `stash`.
 - Não precisamos criar um commit temporário.
 - Não precisamos copiar arquivos.
 
 ## 8. Criando o Worktree para o hotfix
-
 Agora vamos criar uma branch específica para a correção:
 ```bash
-git worktree add -b hotfix/saldo ../proj_fix main
+git worktree add -b hotfix/saldo ../WorktreeTestsFix main
 ```
 
 Esse comando:
 1. cria a branch `hotfix/saldo`;
-2. cria o worktree `../proj_fix`;
+2. cria o worktree `../WorktreeTestsFix`;
 3. utiliza a `main` como ponto de partida.
 
 Agora temos:
 ```text
-proj/ [main]
-
-proj_dashboard/ [feature/dashboard]
-proj_fix/ [hotfix/saldo]
+WorktreeTests/          [main]
+WorktreeTestsFeature/   [feature/dashboard]
+WorktreeTestsFix/       [hotfix/saldo]
 ```
 
 Podemos confirmar:
-```bash
-git worktree list
 
-.../proj            d464825 [master]
-.../proj_dashboard  d464825 [feature/dashboard]
-.../proj_fix        d464825 [hotfix/saldo]
-```
+![alt text](image-2.png)
 
 ## 9. Corrigindo o problema
-
 Entramos no worktree do hotfix:
 
 ```bash
-cd ../proj_fix
+cd ../WorktreeTestsFix
 ```
 
 Agora estamos na:
 ```text
 hotfix/saldo
 ```
-
 Fazemos a correção normalmente. E depois:
 ```bash
 git add .
 git commit -m "fix: corrige cálculo do saldo"
 ```
-
 O hotfix está pronto.
-
----
 
 ## 10. O que aconteceu com a feature?
 
 Enquanto corrigíamos o problema, a feature continuou exatamente como estava:
-
 ```text
-proj_dashboard/
-    ↓
-feature/dashboard
+WorktreeTestsFeature/ [feature/dashboard]
     ↓
 código incompleto
 alterações não commitadas
 ```
+![alt text](image-3.png)
 
 Não precisamos interromper o trabalho.
 
 Esse é justamente o cenário em que o Worktree começa a fazer sentido.
 
 Temos:
-
 ```text
-                    Repositório
-
-              ┌────────┼─────────┐
-              ↓        ↓         ↓
-            main   dashboard   hotfix
-              ↓        ↓         ↓
-           proj/   proj_dashboard/  proj_fix/
+                        Repositório
+           ┌─────────────────┼───────────────────────────┐
+           ↓                 ↓                           ↓
+        main            dashboard                    hotfix
+           ↓                 ↓                           ↓
+    WorktreeTests/   WorktreeTestsFeature/      WorktreeTestsFix/
 ```
 
 Cada branch está aberta em seu próprio diretório.
-
----
 
 ## 11. Finalizando o hotfix
 
@@ -286,7 +255,7 @@ git push -u origin hotfix/saldo
 Depois que o hotfix for integrado à `main`, o worktree pode ser removido:
 
 ```bash
-git worktree remove ../proj_fix
+git worktree remove ../WorktreeTestsFix
 ```
 
 A branch não é automaticamente removida:
@@ -294,17 +263,16 @@ A branch não é automaticamente removida:
 ```bash
 git branch
 ```
+![alt text](image-4.png)
 
 Ela continuará existindo até ser excluída explicitamente.
-
----
 
 ## 12. Continuando a feature
 
 Agora podemos voltar para:
 
 ```bash
-cd ../proj_dashboard
+cd ../WorktreeTestsFeature
 ```
 
 E continuar exatamente de onde paramos.
@@ -317,8 +285,6 @@ continua o desenvolvimento
 
 O trabalho da feature não precisou ser guardado ou interrompido para corrigir o problema urgente.
 
----
-
 ## 13. Visualizando todos os Worktrees
 
 Durante todo o processo podemos utilizar:
@@ -326,40 +292,27 @@ Durante todo o processo podemos utilizar:
 ```bash
 git worktree list
 ```
-
-Por exemplo:
-
-```text
-.../proj             abc1234 [main]
-.../proj_dashboard   def5678 [feature/dashboard]
-.../proj_fix         ghi9012 [hotfix/saldo]
-```
+![alt text](image-5.png)
 
 Isso mostra fisicamente onde cada branch está aberta.
-
----
 
 ## 14. Removendo o Worktree da feature
 
 Quando a feature terminar e o branch não precisar mais de um worktree separado:
 
 ```bash
-git worktree remove ../proj_dashboard
+git worktree remove ../WorktreeTestsFeature
 ```
 
 Depois podemos verificar:
 
-```bash
-git worktree list
-```
+![alt text](image-6.png)
 
 E, se alguma referência antiga permanecer:
 
 ```bash
 git worktree prune
 ```
-
----
 
 ## 15. O que aprendemos
 
@@ -372,11 +325,10 @@ hotfix/saldo
 ```
 
 E três diretórios:
-
 ```text
-proj/
-proj_dashboard/
-proj_fix/
+WorktreeTests/
+WorktreeTestsFeature/
+WorktreeTestsFix/
 ```
 
 O ponto principal é que **uma branch não precisa ficar presa ao mesmo diretório que as outras branches**.
@@ -384,7 +336,6 @@ O ponto principal é que **uma branch não precisa ficar presa ao mesmo diretór
 O Worktree permite manter essas linhas de desenvolvimento abertas simultaneamente.
 
 ### Sem Worktree
-
 ```text
 1 diretório
     ↓
@@ -394,13 +345,50 @@ outro estado do projeto
 ```
 
 ### Com Worktree
-
 ```text
-             repositório
-          /       |                ↓        ↓        ↓
-       main   dashboard   hotfix
-         ↓        ↓        ↓
-      proj/   proj_dashboard/  proj_fix/
+                        Repositório
+           ┌─────────────────┼───────────────────────────┐
+           ↓                 ↓                           ↓
+        main            dashboard                    hotfix
+           ↓                 ↓                           ↓
+    WorktreeTests/   WorktreeTestsFeature/      WorktreeTestsFix/
 ```
 
 Assim, quando uma alteração urgente aparece, podemos simplesmente entrar no diretório correspondente à branch que precisa ser alterada.
+
+# Por fim
+Agora que as duas alterações foram concluídas, podemos fazer o merge das branches `fix` e `feature` na `main`.
+
+Primeiro, voltamos para o worktree da `main`:
+```bash
+cd ../WorktreeTests
+```
+Depois, fazemos o merge da branch de correção:
+```bash
+git merge hotfix/corrige-saldo
+```
+E em seguida, fazemos o merge da feature:
+```bash
+git merge feature/dashboard
+```
+
+Assim, a main passa a conter tanto a correção urgente quanto a nova funcionalidade desenvolvida separadamente nos outros worktrees.
+
+Por fim, podemos conferir o estado das branches e dos worktrees:
+```bash
+git status
+git worktree list
+```
+Dessa forma, o fluxo completo ficou:
+```text
+
+                  ┌──── hotfix/saldo ─────┐
+                  │                       │
+main ─────────────┼───────────────────────┼── merge
+                  │                       │
+                  └── feature/dashboard ──┘
+                                          ↓
+                                        main
+```
+
+> O objetivo do Worktree aqui foi permitir que a feature/dashboard continuasse em desenvolvimento enquanto a correção urgente era feita de forma independente, sem precisar interromper ou guardar o trabalho da feature.
