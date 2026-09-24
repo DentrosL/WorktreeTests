@@ -197,7 +197,7 @@ WorktreeTestsFix/       [hotfix/saldo]
 
 Podemos confirmar:
 
-![alt text](image-2.png)
+![alt text](/imgs/image-2.png)
 
 ## 9. Corrigindo o problema
 Entramos no worktree do hotfix:
@@ -226,7 +226,7 @@ WorktreeTestsFeature/ [feature/dashboard]
 código incompleto
 alterações não commitadas
 ```
-![alt text](image-3.png)
+![alt text](/imgs/image-3.png)
 
 Não precisamos interromper o trabalho.
 
@@ -263,7 +263,7 @@ A branch não é automaticamente removida:
 ```bash
 git branch
 ```
-![alt text](image-4.png)
+![alt text](/imgs/image-4.png)
 
 Ela continuará existindo até ser excluída explicitamente.
 
@@ -292,7 +292,7 @@ Durante todo o processo podemos utilizar:
 ```bash
 git worktree list
 ```
-![alt text](image-5.png)
+![alt text](/imgs/image-5.png)
 
 Isso mostra fisicamente onde cada branch está aberta.
 
@@ -306,7 +306,7 @@ git worktree remove ../WorktreeTestsFeature
 
 Depois podemos verificar:
 
-![alt text](image-6.png)
+![alt text](/imgs/image-6.png)
 
 E, se alguma referência antiga permanecer:
 

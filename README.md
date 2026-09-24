@@ -1,6 +1,6 @@
 # Git Worktree
 
-![alt text](image.png)
+![alt text](/imgs/image.png)
 
 O **Git Worktree** permite trabalhar com múltiplas branches do mesmo repositório simultaneamente, cada uma em um diretório diferente.
 
