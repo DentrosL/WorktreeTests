@@ -49,8 +49,6 @@ git worktree add --detach ../teste
 git worktree add --force ../feature-login feature/login
 ```
 
----
-
 ### Remove uso:
 ```bash
 git worktree remove <worktree>
@@ -65,8 +63,6 @@ git worktree remove ../feature-login
 git worktree remove --force ../feature-login
 ```
 > A remoção do worktree não remove a branch associada a ele.
-
----
 
 ### Prune uso:
 
@@ -88,8 +84,6 @@ git worktree prune --dry-run
 git worktree prune --verbose
 ```
 
----
-
 ### Lock uso:
 ```bash
 git worktree lock <worktree>
@@ -104,8 +98,6 @@ O motivo pode ser visualizado posteriormente com:
 git worktree list
 ```
 
----
-
 ### Unlock uso:
 ```bash
 git worktree unlock <worktree>
@@ -114,8 +106,6 @@ Exemplo:
 ```bash
 git worktree unlock ../feature-login
 ```
-
----
 
 ### List uso:
 ```bash
@@ -137,8 +127,6 @@ git worktree list --porcelain
 git worktree list --verbose
 ```
 
----
-
 ### Move uso:
 ```bash
 git worktree move <worktree> <new-path>
@@ -149,8 +137,6 @@ git worktree move ../feature-login ../login
 ```
 Isso altera o caminho registrado pelo Git sem precisar remover e recriar o worktree.
 
----
-
 ### Repair uso:
 ```bash
 git worktree repair
@@ -160,8 +146,6 @@ Também pode ser utilizado informando caminhos específicos:
 git worktree repair <path>
 ```
 É especialmente útil depois de mover manualmente um diretório ou alterar a localização do repositório principal.
-
----
 
 ### Exemplo de uso completo
 
@@ -203,8 +187,6 @@ Para remover quando terminar:
 ```bash
 git worktree remove ../projeto-dev
 ```
-
----
 
 ### Fluxo básico
 
